@@ -12,11 +12,14 @@ type LeetCodeResponse = {
 
 function parseProblemUrl(value: string) {
   try {
-    const url = new URL(value);
+    const normalized = /^https?:\/\//i.test(value)
+      ? value
+      : `https://${value.replace(/^\/+/, "")}`;
+    const url = new URL(normalized);
     if (!["leetcode.com", "www.leetcode.com"].includes(url.hostname.toLowerCase())) {
       return null;
     }
-    const match = url.pathname.match(/^\/problems\/([a-z0-9-]+)\/?$/i);
+    const match = url.pathname.match(/^\/problems\/([a-z0-9-]+)(?:\/.*)?$/i);
     return match?.[1] ?? null;
   } catch {
     return null;

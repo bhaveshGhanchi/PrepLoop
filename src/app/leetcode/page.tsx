@@ -21,10 +21,13 @@ type ProblemMetadata = {
 
 function isLeetCodeProblemUrl(value: string) {
   try {
-    const url = new URL(value);
+    const normalized = /^https?:\/\//i.test(value)
+      ? value
+      : `https://${value.replace(/^\/+/, "")}`;
+    const url = new URL(normalized);
     return (
       ["leetcode.com", "www.leetcode.com"].includes(url.hostname.toLowerCase()) &&
-      /^\/problems\/[a-z0-9-]+\/?$/i.test(url.pathname)
+      /^\/problems\/[a-z0-9-]+(?:\/.*)?$/i.test(url.pathname)
     );
   } catch {
     return false;
@@ -157,6 +160,12 @@ export default function LeetcodePage() {
                     setProblemTitle(value);
                     setDifficulty("");
                     setTagInput("");
+                  }
+                }}
+                onPaste={(event) => {
+                  const value = event.clipboardData.getData("text");
+                  if (isLeetCodeProblemUrl(value)) {
+                    window.setTimeout(() => void extractMetadata(value), 0);
                   }
                 }}
                 onBlur={() => void extractMetadata()}
