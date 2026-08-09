@@ -1,50 +1,81 @@
 # PrepLoop
 
-Interview prep workspace for **LeetCode**, **HLD**, **LLD**, and **behavioral** stories.
+[![CI](https://github.com/bhaveshGhanchi/PrepLoop/actions/workflows/ci.yml/badge.svg)](https://github.com/bhaveshGhanchi/PrepLoop/actions/workflows/ci.yml)
 
-Job apply flow stays in Jobright. PrepLoop is for preparation only.
+A full-stack interview preparation workspace for deliberate coding practice,
+system design, and behavioral storytelling.
 
-## Features
+[Live Demo](https://prep-loop-bhavesh-projects-108.vercel.app) ·
+[Source Code](https://github.com/bhaveshGhanchi/PrepLoop)
 
-1. **LeetCode** — approach required before opening LC; paste accepted code for tags + time/space analysis
-2. **HLD** — random high-level system design questions with saved practice notes
-3. **LLD** — random low-level / OOP design questions with saved practice notes
-4. **Behavioral** — structured STAR stories with proofread / 60-second polish
-5. **Today** — a dashboard that tracks the current day’s practice loop
-6. **History** — searchable, cross-device practice history
+## Why PrepLoop
 
-Practice saves locally first and syncs to Supabase after sign-in. Without an AI
-provider, analysis uses an instant local heuristic and labels the result accordingly.
+Interview preparation is often scattered across coding platforms, documents, and
+notes. PrepLoop combines the recurring practice loop in one responsive application
+while intentionally leaving job applications to dedicated tools.
 
-## Stack
+## Highlights
 
-- Next.js (App Router) + TypeScript + Tailwind
-- Supabase authentication + PostgreSQL
-- Optional AI API
-- Chrome extension (planned, separate package later)
+- **Approach-first coding:** requires a written strategy before opening a problem.
+- **LeetCode metadata:** extracts the problem name, difficulty, and topic tags from
+  pasted LeetCode URLs.
+- **Solution review:** saves accepted code, language, approach, inferred tags, and
+  time/space complexity for later revision.
+- **System design practice:** serves randomized HLD and LLD prompts with structured
+  answer frameworks.
+- **Behavioral coaching:** captures STAR stories and provides concise proofreading
+  and delivery feedback.
+- **Cross-device history:** synchronizes searchable practice records between desktop
+  and mobile while retaining a local-first cache.
+- **Secure accounts:** uses Supabase authentication and PostgreSQL row-level security
+  so users can only access their own records.
+- **Automated delivery:** validates every push with GitHub Actions and deploys the
+  production application through Vercel.
+- **Privacy-friendly analytics:** measures page usage with Vercel Web Analytics.
 
-## Dev
+## Architecture
+
+- **Frontend:** Next.js App Router, React, TypeScript, Tailwind CSS
+- **Backend:** Next.js route handlers
+- **Database and auth:** Supabase PostgreSQL and Supabase Auth
+- **Security:** per-user row-level security policies
+- **External data:** server-side LeetCode metadata lookup with URL fallback
+- **Analysis:** optional OpenAI-compatible provider with a deterministic local
+  fallback
+- **Hosting:** Vercel
+- **CI/CD:** GitHub Actions and Vercel Git integration
+
+Practice writes to browser storage first for immediate feedback. Authenticated
+sessions then synchronize changes to Supabase, including migration of existing local
+history after the first sign-in.
+
+## Run locally
 
 ```bash
-cd /Users/bhaveshghanchi/Desktop/projects/preploop
+git clone https://github.com/bhaveshGhanchi/PrepLoop.git
+cd PrepLoop
+npm install
+cp .env.example .env.local
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Supabase setup
+## Configuration
 
-1. Copy `.env.example` to `.env.local` and add the project URL and publishable key.
-2. In the Supabase SQL Editor, run the files in `supabase/migrations/` in
-   timestamp order.
-3. Restart the app and use **Sign in to sync**.
+Add the Supabase project URL and publishable key to `.env.local`:
 
-Row-level security restricts every practice entry to its owner. Existing local
-history is uploaded automatically on the first successful sign-in.
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_your_key
+```
 
-## Optional AI provider
+Run the SQL files in `supabase/migrations/` in timestamp order. The migrations
+create the practice schema, indexes, grants, and row-level security policies.
 
-PrepLoop can use any OpenAI-compatible chat-completions endpoint:
+### Optional AI provider
+
+PrepLoop supports OpenAI-compatible chat-completions APIs:
 
 ```bash
 AI_API_KEY=...
@@ -52,10 +83,32 @@ AI_BASE_URL=https://api.openai.com/v1
 AI_MODEL=...
 ```
 
-Set these in `.env.local` and restart the dev server. Secrets are only read by the
-server-side analysis route.
+These values are read only by the server-side analysis route. Without them, PrepLoop
+uses and clearly labels its local analysis fallback.
 
-## Next
+## Quality checks
 
-The Chrome extension is intentionally a later, separate package. It will enforce
-the same approach gate and sync accepted LeetCode code back into PrepLoop.
+```bash
+npm run lint
+npx tsc --noEmit
+npm run build
+```
+
+The same checks run automatically for pull requests and pushes to `main`.
+
+## Resume summary
+
+**PrepLoop — Full-stack Interview Preparation Platform**
+
+- Built and deployed a responsive Next.js and TypeScript application for coding,
+  system-design, and behavioral interview practice.
+- Designed a local-first synchronization layer backed by Supabase PostgreSQL,
+  authenticated accounts, offline caching, and row-level security.
+- Integrated LeetCode metadata extraction, complexity analysis, searchable revision
+  history, and automated CI/CD with GitHub Actions and Vercel.
+
+## Roadmap
+
+- Chrome extension for approach gating and accepted-code synchronization
+- Spaced-repetition reminders and revision queues
+- Richer practice analytics and progress trends
