@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PrepLoop
 
-## Getting Started
+Interview prep workspace for **LeetCode**, **HLD**, **LLD**, and **behavioral** stories.
 
-First, run the development server:
+Job apply flow stays in Jobright. PrepLoop is for preparation only.
+
+## Features
+
+1. **LeetCode** — approach required before opening LC; paste accepted code for tags + time/space analysis
+2. **HLD** — random high-level system design questions with saved practice notes
+3. **LLD** — random low-level / OOP design questions with saved practice notes
+4. **Behavioral** — structured STAR stories with proofread / 60-second polish
+5. **Today** — a dashboard that tracks the current day’s practice loop
+6. **History** — searchable, cross-device practice history
+
+Practice saves locally first and syncs to Supabase after sign-in. Without an AI
+provider, analysis uses an instant local heuristic and labels the result accordingly.
+
+## Stack
+
+- Next.js (App Router) + TypeScript + Tailwind
+- Supabase authentication + PostgreSQL
+- Optional AI API
+- Chrome extension (planned, separate package later)
+
+## Dev
 
 ```bash
+cd /Users/bhaveshghanchi/Desktop/projects/preploop
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Supabase setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Copy `.env.example` to `.env.local` and add the project URL and publishable key.
+2. In the Supabase SQL Editor, run the files in `supabase/migrations/` in
+   timestamp order.
+3. Restart the app and use **Sign in to sync**.
 
-## Learn More
+Row-level security restricts every practice entry to its owner. Existing local
+history is uploaded automatically on the first successful sign-in.
 
-To learn more about Next.js, take a look at the following resources:
+## Optional AI provider
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+PrepLoop can use any OpenAI-compatible chat-completions endpoint:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+AI_API_KEY=...
+AI_BASE_URL=https://api.openai.com/v1
+AI_MODEL=...
+```
 
-## Deploy on Vercel
+Set these in `.env.local` and restart the dev server. Secrets are only read by the
+server-side analysis route.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Next
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The Chrome extension is intentionally a later, separate package. It will enforce
+the same approach gate and sync accepted LeetCode code back into PrepLoop.
