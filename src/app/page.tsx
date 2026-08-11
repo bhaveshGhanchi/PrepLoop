@@ -124,7 +124,9 @@ export default function Home() {
               : `${today.length} practice ${today.length === 1 ? "session" : "sessions"} logged today.`}
           </p>
           <p className="mt-2 text-sm text-white/45">
-            Your work is stored locally in this browser.
+            {user
+              ? "Saved locally and securely synced across your devices."
+              : "Saved in this browser. Sign in to sync across devices."}
           </p>
         </div>
         <div className="flex gap-2">
